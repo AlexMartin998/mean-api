@@ -7,7 +7,7 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { LoginDto, RegisterDto } from 'src/auth/dto';
+import { RegisterDto } from 'src/auth/dto';
 import { User, UserDocument } from '../entities/user.entity';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class UserRepository {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async create(registerDto: RegisterDto): Promise<UserDocument> {
+  async create(registerDto: RegisterDto): Promise<User> {
     try {
       const user = new this.userModel(registerDto);
 
@@ -32,17 +32,11 @@ export class UserRepository {
     return this.userModel.findById(id);
   }
 
-  async findOneAndComparePassword(loginDto: LoginDto): Promise<UserDocument> {
-    const { email, password } = loginDto;
-    const user = await this.userModel.findOne({ email });
-    const matchPassword: boolean = (user as any)?.comparePassword(password);
-
-    if (!user?.email || !matchPassword) return null;
-
-    return user;
+  async findOneByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email });
   }
 
-  private handleDBExceptions(error) {
+  private handleDBExceptions(error: any) {
     // // Lo hacemos asi para EVITAR consultar la DB para verificar si ya existen registros con esos unique
     // se q solo el email es unique, othewise it should be more generic
     if (+error.code === 11000)

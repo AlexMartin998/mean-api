@@ -8,7 +8,8 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema() // propio de mongo
 export class User {
-  // id: sting  <-  Me lo da MongoDB en auto
+  // no lo coloco como @prop
+  id?: string; // <-  Me lo da MongoDB en auto
 
   @Prop({ required: true })
   name: string;
