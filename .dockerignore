@@ -1,0 +1,12 @@
+Dockerfile
+docker-compose.yml
+.git
+.gitignore
+node_modules/
+docker-compose.prod.yml
+dist
+Dockerfile.devcontainers
+docker-compose-devcontainers.yml
+docker-compose.yml
+notes*
+

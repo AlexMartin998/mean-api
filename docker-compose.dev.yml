@@ -1,0 +1,57 @@
+version: '3.9'
+
+services:
+  # pnpm:
+  #   image: node:18-alpine
+  #   user: ${DOCKER_USER}
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #     target: deps
+  #   container_name: test-app-pnpm
+  #   volumes:
+  #     - .:/app
+
+  # api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #     target: runner
+  #   image: admin-dashboard
+  #   user: ${DOCKER_USER}
+  #   container_name: admin-dashboard-api
+  #   volumes:
+  #     - .:/app
+  #     - ./:/workspace:cached
+  #   ports:
+  #     - ${PORT}:${PORT}
+  #   depends_on:
+  #     - mongodb
+  #     - pnpm
+  #     # mongo:
+  #     #   condition: service_healthy
+  #     # npm:
+  #     #   condition: service_completed_successfully
+
+  mongodb:
+    image: mongo:6.0
+    container_name: ${MONGO_DB_NAME}
+    restart: always
+    ports:
+      - 2717:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    volumes:
+      - mongodb:/data/db
+    command: ['--auth']
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  mongodb:
+    external: false
