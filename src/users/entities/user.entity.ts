@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import { HydratedDocument } from 'mongoose';
 
 import { AuthConstants } from 'src/common/constants';
@@ -29,4 +30,28 @@ export class User {
   roles: string[];
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+const UserSchema = SchemaFactory.createForClass(User);
+
+// Hooks (middleware)
+UserSchema.pre('save', async function (next) {
+  // If the pass is already hashed, it don't re-hashet it
+  if (!this.isModified('password')) return next();
+
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
+
+  next();
+});
+
+UserSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  user.id = user._id;
+
+  delete user.password;
+  delete user._id;
+  delete user.__v;
+
+  return user;
+};
+
+export { UserSchema };
