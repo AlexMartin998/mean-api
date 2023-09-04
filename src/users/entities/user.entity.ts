@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+
 import { AuthConstants } from 'src/common/constants';
 
 export type UserDocument = HydratedDocument<User>;
@@ -14,7 +15,7 @@ export class User {
   @Prop({ unique: true, required: true })
   email: string;
 
-  @Prop({ minlength: 12, required: true }) // minlength hashed
+  @Prop({ minlength: 3, required: true }) // minlength hashed
   password: string;
 
   @Prop({ default: false })
