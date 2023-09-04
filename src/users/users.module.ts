@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { User, UserSchema } from './entities/user.entity';
+import { UserRepository } from './repositories/users.repository';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { User, UserSchema } from './entities/user.entity';
     ]),
   ],
   controllers: [],
-  providers: [],
-  exports: [MongooseModule], // use module entities in another module
+  providers: [UserRepository], // todos los @Injectable se declaran como providers
+  exports: [MongooseModule, UserRepository], // use module entities in another module
 })
 export class UsersModule {}
