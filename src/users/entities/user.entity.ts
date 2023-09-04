@@ -1,5 +1,8 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 import { AuthConstants } from 'src/common/constants';
+
+export type UserDocument = HydratedDocument<User>;
 
 @Schema() // propio de mongo
 export class User {
@@ -24,3 +27,5 @@ export class User {
   })
   roles: string[];
 }
+
+export const UserSchema = SchemaFactory.createForClass(User);
