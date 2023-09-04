@@ -43,6 +43,10 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+UserSchema.methods.comparePassword = function (password: string) {
+  return bcrypt.compareSync(password, this.password);
+};
+
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   user.id = user._id;

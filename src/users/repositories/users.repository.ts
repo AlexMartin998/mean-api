@@ -7,8 +7,8 @@ import {
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { RegisterDto } from 'src/auth/dto';
-import { User } from '../entities/user.entity';
+import { LoginDto, RegisterDto } from 'src/auth/dto';
+import { User, UserDocument } from '../entities/user.entity';
 
 @Injectable()
 export class UserRepository {
@@ -18,7 +18,7 @@ export class UserRepository {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async create(registerDto: RegisterDto): Promise<User> {
+  async create(registerDto: RegisterDto): Promise<UserDocument> {
     try {
       const user = new this.userModel(registerDto);
 
@@ -26,6 +26,20 @@ export class UserRepository {
     } catch (error) {
       this.handleDBExceptions(error);
     }
+  }
+
+  async findOne(id: number): Promise<User> {
+    return this.userModel.findById(id);
+  }
+
+  async findOneAndComparePassword(loginDto: LoginDto): Promise<UserDocument> {
+    const { email, password } = loginDto;
+    const user = await this.userModel.findOne({ email });
+    const matchPassword: boolean = (user as any)?.comparePassword(password);
+
+    if (!user?.email || !matchPassword) return null;
+
+    return user;
   }
 
   private handleDBExceptions(error) {
