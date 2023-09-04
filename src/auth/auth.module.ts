@@ -10,8 +10,6 @@ import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
-    UsersModule,
-
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -19,6 +17,8 @@ import { AuthController } from './auth.controller';
         signOptions: { expiresIn: '3d' },
       }),
     }),
+
+    UsersModule,
   ],
 
   controllers: [AuthController],

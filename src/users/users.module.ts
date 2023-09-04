@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { User, UserSchema } from './entities/user.entity';
 import { UserRepository } from './repositories/users.repository';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { UserRepository } from './repositories/users.repository';
     ]),
   ],
   controllers: [],
-  providers: [UserRepository], // todos los @Injectable se declaran como providers
-  exports: [MongooseModule, UserRepository], // use module entities in another module
+  providers: [UsersService, UserRepository], // todos los @Injectable se declaran como providers
+  exports: [MongooseModule, UsersService, UserRepository], // use module entities in another module
 })
 export class UsersModule {}
