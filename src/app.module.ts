@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { EnvConfiguration } from './config';
 import { UsersModule } from './users/users.module';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -17,6 +18,8 @@ import { UsersModule } from './users/users.module';
     AuthModule,
 
     UsersModule,
+
+    CommonModule,
   ],
   controllers: [],
   providers: [],
