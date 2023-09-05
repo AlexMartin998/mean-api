@@ -13,6 +13,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>(Envs.PORT);
 
+  // enable CORS
+  app.enableCors({});
+
   // validate DTO's
   app.useGlobalPipes(
     new ValidationPipe({

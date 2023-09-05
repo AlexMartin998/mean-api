@@ -17,8 +17,7 @@ export class UsersController {
   @UseGuards(AuthGuard)
   findOne(@Param('id') id: string, @Request() req: Request) {
     const user = req['user']; // after guard
-    console.log(user);
 
-    // return this.usersService.findOne(id);
+    return this.usersService.findOne(id);
   }
 }
