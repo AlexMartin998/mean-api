@@ -5,7 +5,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, isValidObjectId } from 'mongoose';
 
 import { RegisterDto } from 'src/auth/dto';
 import { User } from '../entities/user.entity';
@@ -28,8 +28,11 @@ export class UserRepository {
     }
   }
 
-  async findOne(id: number): Promise<User> {
-    return this.userModel.findById(id);
+  async findOne(id: string): Promise<User | null> {
+    if (!isValidObjectId(id)) throw new BadRequestException('Invalid User ID');
+
+    // validate soft delete
+    return this.userModel.findById(id).where('isDeleted', false);
   }
 
   async findOneByEmail(email: string): Promise<User> {
