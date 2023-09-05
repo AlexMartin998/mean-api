@@ -1,7 +1,15 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -16,5 +24,13 @@ export class AuthController {
   @Post('login')
   login(@Body() loginUserDto: LoginDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('renew-token')
+  checkAuthStatus(@Request() req: Request) {
+    const user = req['user']; // after guard
+
+    return this.authService.renewJwt(user);
   }
 }

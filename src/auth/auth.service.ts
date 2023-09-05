@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { JwtPayload } from './common/interfaces';
 import { AuthMapper } from './common/utils';
@@ -31,6 +32,12 @@ export class AuthService {
         'There was a problem logging in. Check your email and password or create an account',
       );
 
+    const token = await this.getJwt({ id: user.id });
+
+    return AuthMapper.mapToAuthResponseDto(token, user);
+  }
+
+  async renewJwt(user: User): Promise<AuthResponseDto> {
     const token = await this.getJwt({ id: user.id });
 
     return AuthMapper.mapToAuthResponseDto(token, user);

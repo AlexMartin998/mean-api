@@ -36,7 +36,7 @@ export class UserRepository {
   }
 
   async findOneByEmail(email: string): Promise<User> {
-    return this.userModel.findOne({ email });
+    return this.userModel.findOne({ email }).where('isDeleted', false);
   }
 
   async findAll(): Promise<User[]> {
