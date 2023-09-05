@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app.module';
+import { Envs } from './common/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,7 +11,7 @@ async function bootstrap() {
 
   // Get EnvV
   const configService = app.get(ConfigService);
-  const PORT = configService.get<number>('port');
+  const PORT = configService.get<number>(Envs.PORT);
 
   // validate DTO's
   app.useGlobalPipes(

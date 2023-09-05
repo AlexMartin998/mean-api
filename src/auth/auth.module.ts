@@ -6,6 +6,7 @@ import { UsersModule } from 'src/users/users.module';
 
 import { AuthService } from './auth.service';
 
+import { Envs } from 'src/common/constants';
 import { AuthController } from './auth.controller';
 
 @Module({
@@ -13,7 +14,7 @@ import { AuthController } from './auth.controller';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        secret: configService.get<string>('jwtSecret'),
+        secret: configService.get<string>(Envs.JWT_SECRET),
         signOptions: { expiresIn: '3d' },
       }),
     }),
@@ -24,5 +25,7 @@ import { AuthController } from './auth.controller';
   controllers: [AuthController],
 
   providers: [AuthService],
+
+  exports: [JwtModule],
 })
 export class AuthModule {}
