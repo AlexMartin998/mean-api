@@ -36,6 +36,10 @@ export class UserRepository {
     return this.userModel.findOne({ email });
   }
 
+  async findAll(): Promise<User[]> {
+    return this.userModel.find();
+  }
+
   private handleDBExceptions(error: any) {
     // // Lo hacemos asi para EVITAR consultar la DB para verificar si ya existen registros con esos unique
     // se q solo el email es unique, othewise it should be more generic
