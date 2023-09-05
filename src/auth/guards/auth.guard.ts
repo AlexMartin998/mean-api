@@ -7,6 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Envs } from 'src/common/constants';
+import { UsersService } from '../../users/users.service';
 import { JwtPayload } from '../common/interfaces';
 
 @Injectable()
@@ -14,6 +15,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userService: UsersService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -25,11 +27,13 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: this.configService.get<string>(Envs.JWT_SECRET),
       });
-      request['userId'] = payload.id;
+
+      const user = await this.userService.findOne(payload.id);
+      request['user'] = user;
 
       return true;
     } catch (error) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid token');
     }
   }
 
